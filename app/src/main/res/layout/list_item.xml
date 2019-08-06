@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        xmlns:cardView="http://schemas.android.com/apk/res-auto"
+        android:layout_margin="8dp"
+        cardView:cardCornerRadius="10dp"
+        cardView:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:background="#FFF"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/textview_amount_item"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="Operation"
+            android:textColor="#000"
+            android:textSize="25sp" />
+
+
+
+        <TextView
+            android:id="@+id/equliv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:text="="
+            android:textColor="#000"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textview_name_item"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text=" Result"
+            android:textColor="#000"
+            android:textSize="25sp" />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/date_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="date"
+        android:layout_marginStart="10dp"
+        android:textSize="20sp"
+
+        />
+    <TextView
+        android:id="@+id/share_but"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="35dp"
+        android:layout_marginStart="295dp"
+        android:background="#FFF"
+        android:drawableTop="@drawable/ic_share" />
+
+
+</androidx.cardview.widget.CardView>
