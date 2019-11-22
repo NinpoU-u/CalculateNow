@@ -11,13 +11,13 @@ import java.text.DecimalFormat;
 
 public class EquationSolver {
     private SharedPreferences sp;
-    //в конструкторе получаем преференсмэнеджер, и вызываем на нем стандартные настройки, передаем контекст
+    // As usual, we use the default SharedPreferences to access the user's preferences
     public EquationSolver(Context context) {
         this.sp = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    //в методе solve, указываем значения для каждого оператора или функции
-    //много созданий новый строк
+    //We substitute the values ​​for our variables, those that were displayed for human understanding on the UI,
+    //we change to those that android will understand
     public String solve(String s) {
         s = s.replace("π", "" + Math.PI).replace("e", "" + Math.E)
                 .replace("n ", "ln ( ").replace("l ", "log ( ").replace("√ ", "√ ( ")
@@ -28,12 +28,12 @@ public class EquationSolver {
         s = solveBasicOperators(s, " + ", " - ");
         return s;
     }
-    // метод в котором описана логика работы дополнительных операторов, таких как (), ln и тд
+    // method to check brackets when calculating
     private String solveAdvancedOperators(String s) {
         while (numOfOccurrences('(', s) > numOfOccurrences(')', s))
             s += ") ";
         while (s.contains("(")) {
-            //подставляем ( в начало выражения
+            //in case is string has "(" as first
             int startIndex = s.indexOf('(');
             int endIndex = 0;
             for (int i = startIndex, layer = 0; i < s.length(); i++) {
@@ -51,7 +51,6 @@ public class EquationSolver {
                     + " " + s.substring(endIndex + 2);
         }
         while (s.contains("ln")) {
-            //подставляем ln в начало выражения
             int startIndex = s.indexOf("ln");
             int endIndex = s.indexOf(' ', startIndex + 3);
             s = s.substring(0, startIndex)
@@ -59,7 +58,6 @@ public class EquationSolver {
                     + s.substring(endIndex);
         }
         while (s.contains("log")) {
-            //подставляем log в начало выражения
             int startIndex = s.indexOf("log");
             int endIndex = s.indexOf(' ', startIndex + 4);
             s = s.substring(0, startIndex)
@@ -67,7 +65,6 @@ public class EquationSolver {
                     + s.substring(endIndex);
         }
         while (s.contains("sin")) {
-            //подставляем sin в начало выражения
             int startIndex = s.indexOf("sin");
             int endIndex = s.indexOf(' ', startIndex + 4);
             double num = Double.parseDouble(solveAdvancedOperators(s.substring(startIndex + 4, endIndex)));
@@ -83,7 +80,6 @@ public class EquationSolver {
                     + s.substring(endIndex);
         }
         while (s.contains("cos")) {
-            //подставляем cos в начало выражения
             int startIndex = s.indexOf("cos");
             int endIndex = s.indexOf(' ', startIndex + 4);
             double num = Double.parseDouble(solveAdvancedOperators(s.substring(startIndex + 4, endIndex)));
@@ -99,7 +95,6 @@ public class EquationSolver {
                     + s.substring(endIndex);
         }
         while (s.contains("tan")) {
-            //подставляем tan в начало выражения
             int startIndex = s.indexOf("tan");
             int endIndex = s.indexOf(' ', startIndex + 4);
             double num = Double.parseDouble(solveAdvancedOperators(s.substring(startIndex + 4, endIndex)));
@@ -115,7 +110,6 @@ public class EquationSolver {
                     + s.substring(endIndex);
         }
         while (s.contains("√")) {
-            //подставляем корень в начало выражения
             int startIndex = s.indexOf('√');
             int endIndex = s.indexOf(' ', startIndex + 2);
             s = s.substring(0, startIndex)
@@ -123,7 +117,6 @@ public class EquationSolver {
                     + s.substring(endIndex);
         }
         while (s.contains("!")) {
-            //подставляем факториал в начало выражения
             s = " " + s + " ";
             String s1 = "";
             String s2 = s.substring(s.lastIndexOf(" ", s.indexOf("!") - 2) + 1, s.indexOf("!") - 1);
@@ -141,7 +134,7 @@ public class EquationSolver {
         }
         return s;
     }
-    //мето для описания логики решения уравнений с простыми операторами
+    //method to describe the logic of solving equations with simple operators
     private String solveBasicOperators(String s, String op1, String op2) {
         s = " " + s + " ";
         while (s.contains(op1) || s.contains(op2)) {
@@ -195,7 +188,7 @@ public class EquationSolver {
         }
         return output;
     }
-    //метод для обработки количества случаев появления символа в строке
+    //method for handling the number of times a character appears in a string
     private int numOfOccurrences(char c, String s) {
         int count = 0;
         for (int i = 0; i < s.length(); i++)

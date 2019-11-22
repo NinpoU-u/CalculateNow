@@ -11,7 +11,7 @@ public class Equation extends ArrayList<String> {
             text += s + " ";
         return text;
     }
-    //установить текст
+    //set Text
     public void setText(String text) {
         while (size() > 0)
             removeLast();
@@ -21,42 +21,43 @@ public class Equation extends ArrayList<String> {
                 add(s);
         }
     }
-    //метод добавления символа в строку
+    //method to add symbol in string
     public void attachToLast(char c) {
         if (size() == 0)
             add("" + c);
         else
             set(size() - 1, getLast() + c);
     }
-    //способ отсоединения с конца
+    //end connection method
     public void detachFromLast() {
         if (getLast().length() > 0) {
             set(size() - 1, getLast().substring(0, getLast().length() - 1));
         }
     }
-    //способ удаления посследнего символа с строки
+    //way to remove the last character from a string
     public void removeLast() {
         if (size() > 0)
             remove(size() - 1);
     }
-    //получить последнюю строку
+    //get last string
     public String getLast() {
         return getRecent(0);
     }
-    //получить последнюю символ
+
+    //get last symbol
     public char getLastChar() {
         String s = getLast();
         if (s.length() > 0)
             return s.charAt(s.length() - 1);
         return ' ';
     }
-    //недавний(предыдущий ссимвол)
+    //recent(previous character)
     public String getRecent(int indexFromLast) {
         if (size() <= indexFromLast)
             return "";
         return get(size() - indexFromLast - 1);
     }
-    //проверка на цифру
+    //digit check
     public boolean isNumber(int i) {
         String s = getRecent(i);
         if (s != null && s.length() > 0) {
@@ -66,7 +67,7 @@ public class Equation extends ArrayList<String> {
         }
         return false;
     }
-    //проверка на оператор
+    //operator check
     public boolean isOperator(int i) {
         String s = getRecent(i);
         if (s != null && s.length() == 1) {
@@ -84,7 +85,7 @@ public class Equation extends ArrayList<String> {
                 return true;
         return false;
     }
-    ////Проверка на первый символ
+    //first symbol & operator check
     public boolean isStartCharacter(int i) {
         String s = getRecent(i);
         if (s != null && s.length() > 0) {
@@ -98,7 +99,7 @@ public class Equation extends ArrayList<String> {
             return true;
         return false;
     }
-    //проверка на определенный символ
+    //check on special symbol
     public int numOf(char c) {
         int count = 0;
         for (int i = 0; i < getText().length(); i++)

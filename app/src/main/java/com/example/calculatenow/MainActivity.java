@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.calculatenow.adapter.DataAdapter;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
 
@@ -28,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView displaySecondary;
     private HorizontalScrollView hsv;
     private SQLiteDatabase mDatabase;
-    private DataAdapter mAdapter;
 
 
     @Override
@@ -79,11 +77,15 @@ public class MainActivity extends AppCompatActivity {
                     setTheme(R.style.AppTheme_Light_Red);
                     break;
             }
+
         setContentView(R.layout.activity_main);
-        //экраны для БД
+
+        //fields for database
         displayPrimary = findViewById(R.id.display_primary);
         displaySecondary = findViewById(R.id.display_secondary);
         hsv =  findViewById(R.id.display_hsv);
+
+        //init view (Buttons digit)
         TextView[] digits = {
                 findViewById(R.id.button_0),
                 findViewById(R.id.button_1),
@@ -104,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+        //init view (Buttons)
         TextView[] buttons = {
                 findViewById(R.id.button_e),
                 findViewById(R.id.button_pi),
                 findViewById(R.id.button_cos),
-                //findViewById(R.id.button_tan),
                 findViewById(R.id.button_ln),
                 findViewById(R.id.button_log),
                 findViewById(R.id.button_factorial),
@@ -161,13 +163,6 @@ public class MainActivity extends AppCompatActivity {
                         calculator.numOpNum('+');
                     if (id.equals("."))
                         calculator.decimal();
-                    /*if (id.equals("=") && !getText().equals(""))
-                        calculator.equal();
-                        String input = displayPrimary.getText().toString();
-                        String result = displaySecondary.getText().toString();
-
-                        addDetails(input, result);*/
-
                 }
             });
         }
@@ -329,20 +324,9 @@ public class MainActivity extends AppCompatActivity {
         //mAdapter.swapCursor(getAllItems());
     }
 
-    /*private Cursor getAllItems() {
-        return mDatabase.query(
-                DataContract.DataEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DataContract.DataEntry.COLUMN_TIMESTAMP + " DESC"
-        );
-    }*/
 
 
-    //формат строки
+    //String formatting
     private String formatToDisplayMode(String s) {
         return s.replace("/", "÷").replace("*", "×").replace("-", "−")
                 .replace("n ", "ln(").replace("l ", "log(").replace("√ ", "√(")
