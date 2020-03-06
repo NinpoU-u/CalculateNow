@@ -9,6 +9,8 @@
     <style name="AppTheme.Light.slidrActivityTheme" parent="AppTheme.Light">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="panel1">@color/panel_1_dark</item>
+        <item name="panel2">@color/panel_2_dark</item>
     </style>
 
 

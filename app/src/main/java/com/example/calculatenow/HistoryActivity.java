@@ -1,9 +1,13 @@
 package com.example.calculatenow;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +33,55 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (sp.getBoolean("pref_dark", false))
+            switch (sp.getString("pref_theme", "0")) {
+                case "0":
+                    setTheme(R.style.AppTheme_Dark_Blue);
+                    break;
+                case "1":
+                    setTheme(R.style.AppTheme_Dark_Cyan);
+                    break;
+                case "2":
+                    setTheme(R.style.AppTheme_Dark_Gray);
+                    break;
+                case "3":
+                    setTheme(R.style.AppTheme_Dark_Green);
+                    break;
+                case "4":
+                    setTheme(R.style.AppTheme_Dark_Purple);
+                    break;
+                case "5":
+                    setTheme(R.style.AppTheme_Dark_Red);
+                    break;
+            }
+        else
+            switch (sp.getString("pref_theme", "0")) {
+                case "0":
+                    setTheme(R.style.AppTheme_Light_Blue);
+                    break;
+                case "1":
+                    setTheme(R.style.AppTheme_Light_Cyan);
+                    break;
+                case "2":
+                    setTheme(R.style.AppTheme_Light_Gray);
+                    break;
+                case "3":
+                    setTheme(R.style.AppTheme_Light_Green);
+                    break;
+                case "4":
+                    setTheme(R.style.AppTheme_Light_Purple);
+                    break;
+                case "5":
+                    setTheme(R.style.AppTheme_Light_Red);
+                    break;
+            }
+
+
         setContentView(R.layout.activity_history);
         Slidr.attach(this);
 

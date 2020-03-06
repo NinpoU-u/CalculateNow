@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.button_multiply),
                 findViewById(R.id.button_divide),
                 findViewById(R.id.button_decimal)};
+
         for (int i = 0; i < buttons.length; i++) {
             final String id = (String) buttons[i].getText();
             buttons[i].setOnClickListener(new View.OnClickListener() {
