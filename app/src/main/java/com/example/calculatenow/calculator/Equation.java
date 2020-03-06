@@ -1,4 +1,4 @@
-package com.example.calculatenow;
+package com.example.calculatenow.calculator;
 
 import java.util.ArrayList;
 //Класс для создания уравнений(хранятся в коллекции типа стринг)

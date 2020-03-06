@@ -1,4 +1,4 @@
-package com.example.calculatenow;
+package com.example.calculatenow.view;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.preference.PreferenceManager;
 import androidx.core.app.TaskStackBuilder;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.calculatenow.R;
 
 public class SettingsActivity extends AppCompatActivity {
     @Override

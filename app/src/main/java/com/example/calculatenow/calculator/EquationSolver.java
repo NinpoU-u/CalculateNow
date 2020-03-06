@@ -1,4 +1,4 @@
-package com.example.calculatenow;
+package com.example.calculatenow.calculator;
 
 import android.content.Context;
 import android.content.SharedPreferences;

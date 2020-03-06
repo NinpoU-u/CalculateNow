@@ -1,4 +1,6 @@
-package com.example.calculatenow;
+package com.example.calculatenow.calculator;
+
+import com.example.calculatenow.view.MainActivity;
 
 public class Calculator {
     private MainActivity context;

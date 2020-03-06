@@ -1,4 +1,4 @@
-package com.example.calculatenow;
+package com.example.calculatenow.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.calculatenow.R;
+import com.example.calculatenow.calculator.Calculator;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
 

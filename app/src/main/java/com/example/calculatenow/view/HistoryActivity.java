@@ -1,4 +1,4 @@
-package com.example.calculatenow;
+package com.example.calculatenow.view;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.calculatenow.R;
 import com.example.calculatenow.adapter.DataAdapter;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
@@ -25,9 +26,6 @@ public class HistoryActivity extends AppCompatActivity {
     private SQLiteDatabase mDatabase;
     private DataAdapter mAdapter;
     private TextView emptyView;
-
-
-
 
 
     @Override
@@ -124,22 +122,6 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
-    /*private void addItem() {
-
-        if (mEditTextName.getText().toString().trim().length() == 0 || mAmount == 0) {
-            return;
-        }
-
-        String name = mEditTextName.getText().toString();
-        ContentValues cv = new ContentValues();
-        cv.put(DataContract.DataEntry.COLUMN_NAME, name);
-        cv.put(DataContract.DataEntry.COLUMN_AMOUNT, mAmount);
-
-        mDatabase.insert(DataContract.DataEntry.TABLE_NAME, null, cv);
-        mAdapter.swapCursor(getAllItems());
-
-        mEditTextName.getText().clear();
-    }*/
 
     private void removeItem(long id){
         mDatabase.delete(DataContract.DataEntry.TABLE_NAME,
