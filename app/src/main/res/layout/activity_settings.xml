@@ -12,7 +12,7 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:title="Settings"
+        android:title="@string/settings"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <LinearLayout

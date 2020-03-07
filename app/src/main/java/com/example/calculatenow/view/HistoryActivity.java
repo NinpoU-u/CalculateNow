@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +21,6 @@ import com.example.calculatenow.R;
 import com.example.calculatenow.adapter.DataAdapter;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
-import com.r0adkll.slidr.Slidr;
 
 public class HistoryActivity extends AppCompatActivity {
     private SQLiteDatabase mDatabase;
@@ -81,7 +81,9 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_history);
-        Slidr.attach(this);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar_history));
+        getSupportActionBar().setTitle("History");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         DatabaseHelper dbHelper = new DatabaseHelper(this);
@@ -105,6 +107,7 @@ public class HistoryActivity extends AppCompatActivity {
             }
 
 
+        dbHelper.close();
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -141,7 +144,10 @@ public class HistoryActivity extends AppCompatActivity {
         );
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
 
 

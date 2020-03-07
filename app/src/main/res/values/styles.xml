@@ -6,7 +6,7 @@
         <item name="backspace">@drawable/ic_backspace_24px_black</item>
     </style>
 
-    <style name="AppTheme.Light.slidrActivityTheme" parent="AppTheme.Light">
+    <style name="AppTheme.Light.historyActivityTheme" parent="AppTheme.Light">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="panel1">@color/panel_1_dark</item>
@@ -17,7 +17,6 @@
     <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="panel1">@color/panel_1_dark</item>
         <item name="panel2">@color/panel_2_dark</item>
-        <item name="backspace">@drawable/ic_action_name</item>
     </style>
 
     <style name="AppTheme.Light.Blue" parent="AppTheme.Light">

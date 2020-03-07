@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Calculate Now</string>
     <string name="history_is_empty">History is empty!</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
     <string-array name="theme_colors">
         <item>"Blue"</item>
         <item>"Cyan"</item>
