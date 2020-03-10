@@ -8,8 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.calculatenow.R;
 import com.example.calculatenow.database.DataContract;
 
@@ -20,6 +23,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     private Context mContext;
     private Cursor mCursor;
     private int selectedPosition = -1;
+    private final ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
 
     public DataAdapter(Context context, Cursor cursor) {
@@ -28,21 +32,29 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
     }
 
     public class DataViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameText;
-        public TextView countText;
-        public TextView txtShare;
-        public TextView dateText;
+        private TextView nameText;
+        private TextView countText;
+        private TextView txtShare;
+        private TextView dateText;
+        private TextView share_but;
+        private TextView txtDelete;
+        private SwipeRevealLayout swipelayout;
 
         public DataViewHolder(View itemView) {
             super(itemView);
 
-            nameText = itemView.findViewById(R.id.textview_name_item);
+            nameText = itemView.findViewById(R.id.textview_result);
             countText = itemView.findViewById(R.id.textview_amount_item);
             txtShare = itemView.findViewById(R.id.share_but);
             dateText = itemView.findViewById(R.id.date_id);
+            share_but = itemView.findViewById(R.id.share_but);
+            txtDelete = itemView.findViewById(R.id.txtDelete);
+            swipelayout = itemView.findViewById(R.id.swipelayout);
+
         }
     }
 
+    @NonNull
     @Override
     public DataViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
