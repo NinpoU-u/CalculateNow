@@ -3,6 +3,7 @@ package com.example.calculatenow.view;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,10 +23,13 @@ import com.example.calculatenow.adapter.DataAdapter;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 public class HistoryActivity extends AppCompatActivity {
     private SQLiteDatabase mDatabase;
     private DataAdapter mAdapter;
     private TextView emptyView;
+    private Cursor mCursor;
 
 
     @Override
@@ -86,7 +91,7 @@ public class HistoryActivity extends AppCompatActivity {
         mDatabase = dbHelper.getWritableDatabase();
 
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         emptyView = findViewById(R.id.empty_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -103,24 +108,55 @@ public class HistoryActivity extends AppCompatActivity {
             emptyView.setVisibility(View.GONE);
         }
 
-       new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+       new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                 removeItem((int) viewHolder.itemView.getTag());
+                int position = viewHolder.getAdapterPosition();
+
+                switch (direction){
+                    case ItemTouchHelper.LEFT:
+                        mAdapter.sendEquation();
+                        mAdapter.swapCursor(getAllItems());
+                        break;
+                    case ItemTouchHelper.RIGHT:
+                        removeItem((int) viewHolder.itemView.getTag());
+                        /*Snackbar.make(recyclerView, (Integer) viewHolder.itemView.getTag(),Snackbar.LENGTH_LONG)
+                                .setAction("Undo", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                }).show();*/
+                        break;
+                }
             }
-        }).attachToRecyclerView(recyclerView);
+
+           @Override
+           public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+               new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                       .addSwipeLeftBackgroundColor(ContextCompat.getColor(HistoryActivity.this, R.color.green))
+                       .addSwipeLeftActionIcon(R.drawable.ic_share_black_24dp)
+                       .addSwipeRightBackgroundColor(ContextCompat.getColor(HistoryActivity.this, R.color.red))
+                       .addSwipeRightActionIcon(R.drawable.ic_delete_forever_black_24dp)
+                       .create()
+                       .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+           }
+       }).attachToRecyclerView(recyclerView);
 
     }
+
     public void removeItem(int position) {
         mDatabase.delete(DataContract.DataEntry.TABLE_NAME, DataContract.DataEntry._ID + "=" + position, null);
         mAdapter.swapCursor(getAllItems());
         mAdapter.notifyItemRemoved(position);
     }
-
 
 
 

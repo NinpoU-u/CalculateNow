@@ -1,6 +1,7 @@
 package com.example.calculatenow.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +86,16 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         return mCursor.getCount();
     }
 
+    public void sendEquation(){
+        final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
+        final String amount = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_AMOUNT));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, "Your calculation is "
+                + amount +
+                " = " + name);
+        intent.setType("text/plain");
+        mContext.startActivity(Intent.createChooser(intent, "Send To"));
+    }
 
     public void swapCursor(Cursor newCursor) {
         if (mCursor != null) {
