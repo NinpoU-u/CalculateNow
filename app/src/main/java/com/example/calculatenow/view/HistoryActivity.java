@@ -8,34 +8,28 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calculatenow.R;
-import com.example.calculatenow.adapter.SwipeAdapter;
+import com.example.calculatenow.adapter.DataAdapter;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
-import com.example.calculatenow.model.Employee;
-
-import java.util.ArrayList;
 
 public class HistoryActivity extends AppCompatActivity {
     private SQLiteDatabase mDatabase;
-    //private DataAdapter mAdapter;
-    private SwipeAdapter mAdapter;
+    private DataAdapter mAdapter;
     private TextView emptyView;
-    private ArrayList<Employee> employees = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp.getBoolean("pref_dark", false))
@@ -91,60 +85,44 @@ public class HistoryActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         mDatabase = dbHelper.getWritableDatabase();
 
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         emptyView = findViewById(R.id.empty_view);
-        /*recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new DataAdapter(this, getAllItems());
-        recyclerView.setAdapter(mAdapter);*/
-
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mAdapter = new SwipeAdapter(this, getAllItems());
+        mAdapter = new DataAdapter(this, getAllItems());
         recyclerView.setAdapter(mAdapter);
+
 
         if (mAdapter == null || mAdapter.getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
-        //createList();
-        dbHelper.close();
 
-        /*new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+       new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
-
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                removeItem((long) viewHolder.itemView.getTag());
+                 removeItem((int) viewHolder.itemView.getTag());
             }
-        }).attachToRecyclerView(recyclerView);*/
-
+        }).attachToRecyclerView(recyclerView);
 
     }
-
-    /*private void createList() {
-        employees = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            Employee employee = new Employee();
-            employee.setName("Employee " + (i + 1));
-            employees.add(employee);
-        }
-        mAdapter.setEmployees(employees);
-    }*/
-
-
-    private void removeItem(long id){
-        mDatabase.delete(DataContract.DataEntry.TABLE_NAME,
-                DataContract.DataEntry._ID + "=" + id, null);
-        //mAdapter.swapCursor(getAllItems());
+    public void removeItem(int position) {
+        mDatabase.delete(DataContract.DataEntry.TABLE_NAME, DataContract.DataEntry._ID + "=" + position, null);
+        mAdapter.swapCursor(getAllItems());
+        mAdapter.notifyItemRemoved(position);
     }
+
+
+
 
     private Cursor getAllItems() {
         return mDatabase.query(
