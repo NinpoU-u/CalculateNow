@@ -18,9 +18,9 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
-    private Context mContext;
+    //private int selectedPosition = -1;
     private Cursor mCursor;
-    private int selectedPosition = -1;
+    private Context mContext;
 
 
     public DataAdapter(Context context, Cursor cursor) {
@@ -28,12 +28,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         mCursor = cursor;
     }
 
-    public class DataViewHolder extends RecyclerView.ViewHolder {
+    static class DataViewHolder extends RecyclerView.ViewHolder {
         private TextView nameText;
         private TextView countText;
         private TextView dateText;
 
-        public DataViewHolder(View itemView) {
+        DataViewHolder(View itemView) {
             super(itemView);
 
             nameText = itemView.findViewById(R.id.textview_result);
@@ -44,40 +44,31 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 
     @NonNull
     @Override
-    public DataViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.database_history_item, parent, false);
         return new DataViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(DataViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DataViewHolder holder, int position) {
         if (!mCursor.moveToPosition(position)) {
             return;
         }
+        //Calendar
+        Calendar calendar = Calendar.getInstance();
 
+
+        //Database
         final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
         final String amount = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_AMOUNT));
         int id = mCursor.getInt(mCursor.getColumnIndex(DataContract.DataEntry._ID));
-        Calendar calendar = Calendar.getInstance();
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
 
         holder.nameText.setText(name);
         holder.countText.setText(amount);
         holder.itemView.setTag(id);
         holder.dateText.setText(currentDate);
-
-        /*holder.txtShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "Your calculation is "
-                        + amount +
-                        " = " + name);
-                intent.setType("text/plain");
-                mContext.startActivity(Intent.createChooser(intent, "Send To"));
-            }
-        });*/
 
     }
 

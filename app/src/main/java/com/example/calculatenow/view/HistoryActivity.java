@@ -22,6 +22,10 @@ import com.example.calculatenow.R;
 import com.example.calculatenow.adapter.DataAdapter;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
+import com.example.calculatenow.model.EquitationCard;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -29,7 +33,9 @@ public class HistoryActivity extends AppCompatActivity {
     private SQLiteDatabase mDatabase;
     private DataAdapter mAdapter;
     private TextView emptyView;
+    private List<EquitationCard> listOfEquitation;
     private Cursor mCursor;
+    private int is_deleted;
 
 
     @Override
@@ -86,7 +92,6 @@ public class HistoryActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("History");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         mDatabase = dbHelper.getWritableDatabase();
 
@@ -123,14 +128,15 @@ public class HistoryActivity extends AppCompatActivity {
                         mAdapter.swapCursor(getAllItems());
                         break;
                     case ItemTouchHelper.RIGHT:
-                        removeItem((int) viewHolder.itemView.getTag());
-                        /*Snackbar.make(recyclerView, (Integer) viewHolder.itemView.getTag(),Snackbar.LENGTH_LONG)
-                                .setAction("Undo", new View.OnClickListener() {
+                        is_deleted = 1;
+                        final Snackbar snackbar = Snackbar.make(recyclerView, "Equitation is deleted !", Snackbar.LENGTH_LONG);
+                                snackbar.setAction("UNDO", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-
+                                        is_deleted = 0;
                                     }
-                                }).show();*/
+                                }).show();
+                        removeItem((int) viewHolder.itemView.getTag());
                         break;
                 }
             }
@@ -158,6 +164,18 @@ public class HistoryActivity extends AppCompatActivity {
         mAdapter.notifyItemRemoved(position);
     }
 
+    /*public void deleteNotes() {
+        final Snackbar snackbar = Snackbar.make(mRelativeLayout, "Item is deleted", Snackbar.LENGTH_LONG);
+        is_deleted = 1;
+        snackbar.setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                is_deleted = 0;
+            }
+        });
+        snackbar.show();
+        DBOperations.deleteStudent(mDBHelper, id, is_deleted);
+    }*/
 
 
     private Cursor getAllItems() {

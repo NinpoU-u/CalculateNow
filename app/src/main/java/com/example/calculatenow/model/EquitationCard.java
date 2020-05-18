@@ -1,11 +1,23 @@
 package com.example.calculatenow.model;
 
-public class EqutationCard {
+import java.util.List;
+
+public class EquitationCard {
 
     private String result;
     private String amountItem;
-    private String currentDate;
+    private List<EquitationCard> list;
+
     private int tag;
+
+    public EquitationCard() {
+    }
+
+
+    public EquitationCard(String result, String amountItem) {
+        this.result = result;
+        this.amountItem = amountItem;
+    }
 
     public String getResult() {
         return result;
@@ -23,20 +35,16 @@ public class EqutationCard {
         this.amountItem = amountItem;
     }
 
-    public String getCurrentDate() {
-        return currentDate;
-    }
-
-    public void setCurrentDate(String currentDate) {
-        this.currentDate = currentDate;
-    }
-
     public int getTag() {
         return tag;
     }
 
     public void setTag(int tag) {
         this.tag = tag;
+    }
+
+    public List<EquitationCard> getList() {
+        return list;
     }
 
 }

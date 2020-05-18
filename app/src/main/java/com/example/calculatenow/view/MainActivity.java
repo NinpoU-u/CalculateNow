@@ -16,12 +16,16 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.calculatenow.R;
 import com.example.calculatenow.calculator.Calculator;
 import com.example.calculatenow.database.DataContract;
 import com.example.calculatenow.database.DatabaseHelper;
+import com.example.calculatenow.model.EquitationCard;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private Calculator calculator;
@@ -34,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp.getBoolean("pref_dark", false))
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
         //init view (Buttons)
         TextView[] buttons = {
                 findViewById(R.id.button_e),
@@ -261,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putString("text", getText());
     }
@@ -319,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
         String operation = displayPrimary.getText().toString();
         String result = displaySecondary.getText().toString();
+
         ContentValues cv = new ContentValues();
         cv.put(DataContract.DataEntry.COLUMN_NAME, result);
         cv.put(DataContract.DataEntry.COLUMN_AMOUNT, operation);

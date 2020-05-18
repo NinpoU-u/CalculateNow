@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_GROCERYLIST_TABLE = "CREATE TABLE " +
+        final String SQL_CREATE_EQUATION_TABLE = "CREATE TABLE " +
                 DataContract.DataEntry.TABLE_NAME + " (" +
                 DataContract.DataEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 DataContract.DataEntry.COLUMN_NAME + " TEXT NOT NULL, " +
@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DataContract.DataEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ");";
 
-        db.execSQL(SQL_CREATE_GROCERYLIST_TABLE);
+        db.execSQL(SQL_CREATE_EQUATION_TABLE);
     }
 
     @Override
