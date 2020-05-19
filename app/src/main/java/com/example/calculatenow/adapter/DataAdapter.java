@@ -1,7 +1,6 @@
 package com.example.calculatenow.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calculatenow.R;
-import com.example.calculatenow.database.DataContract;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
@@ -60,15 +57,15 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 
 
         //Database
-        final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
+        /*final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
         final String amount = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_AMOUNT));
         int id = mCursor.getInt(mCursor.getColumnIndex(DataContract.DataEntry._ID));
-        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());*/
 
-        holder.nameText.setText(name);
+        /*holder.nameText.setText(name);
         holder.countText.setText(amount);
         holder.itemView.setTag(id);
-        holder.dateText.setText(currentDate);
+        holder.dateText.setText(currentDate);*/
 
     }
 
@@ -77,7 +74,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         return mCursor.getCount();
     }
 
-    public void sendEquation(){
+    /*public void sendEquation(){
         final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
         final String amount = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_AMOUNT));
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -87,7 +84,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         intent.setType("text/plain");
         mContext.startActivity(Intent.createChooser(intent, "Send To"));
     }
-
+*/
     public void swapCursor(Cursor newCursor) {
         if (mCursor != null) {
             mCursor.close();

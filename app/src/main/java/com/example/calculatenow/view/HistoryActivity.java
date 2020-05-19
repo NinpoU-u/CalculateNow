@@ -1,9 +1,8 @@
 package com.example.calculatenow.view;
 
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -19,28 +18,44 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.calculatenow.R;
-import com.example.calculatenow.adapter.DataAdapter;
-import com.example.calculatenow.database.DataContract;
+import com.example.calculatenow.adapter.EquationAdapter;
 import com.example.calculatenow.database.DatabaseHelper;
-import com.example.calculatenow.model.EquitationCard;
+import com.example.calculatenow.model.EquationData;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class HistoryActivity extends AppCompatActivity {
-    private SQLiteDatabase mDatabase;
-    private DataAdapter mAdapter;
     private TextView emptyView;
-    private List<EquitationCard> listOfEquitation;
-    private Cursor mCursor;
-    private int is_deleted;
 
+    private EquationData deletedItemEquation;
+    private EquationData deletedItemResult;
+    private int deletedIndex;
+    private DatabaseHelper db;
+    private List<EquationData> equationList = new ArrayList<>();
+    private EquationAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db =  DatabaseHelper.getInstance(this);
+
+        if (equationList != null) {
+            equationList.addAll(db.getAllEq());
+        }
+
+        //Shared prefs to send data between 2 activities
+        SharedPreferences equationProcess = getSharedPreferences("my_prefs", 0);
+        String equation = equationProcess.getString("operation", "");
+        String result = equationProcess.getString("result", "");
+
+        createEquation(equation, result);
+
+
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp.getBoolean("pref_dark", false))
@@ -91,27 +106,18 @@ public class HistoryActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_history));
         getSupportActionBar().setTitle("History");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        mDatabase = dbHelper.getWritableDatabase();
+        emptyView = findViewById(R.id.empty_view);
 
 
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        emptyView = findViewById(R.id.empty_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        mAdapter = new DataAdapter(this, getAllItems());
+        mAdapter = new EquationAdapter(this, equationList);
         recyclerView.setAdapter(mAdapter);
 
 
-        if (mAdapter == null || mAdapter.getItemCount() == 0) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-        }
+        toggleEmptyNotes();
 
        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -120,24 +126,39 @@ public class HistoryActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
 
-                switch (direction){
-                    case ItemTouchHelper.LEFT:
-                        mAdapter.sendEquation();
-                        mAdapter.swapCursor(getAllItems());
-                        break;
-                    case ItemTouchHelper.RIGHT:
-                        is_deleted = 1;
-                        final Snackbar snackbar = Snackbar.make(recyclerView, "Equitation is deleted !", Snackbar.LENGTH_LONG);
-                                snackbar.setAction("UNDO", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        is_deleted = 0;
-                                    }
-                                }).show();
-                        removeItem((int) viewHolder.itemView.getTag());
-                        break;
+                if (viewHolder instanceof EquationAdapter.MyViewHolder) {
+                    int position = viewHolder.getAdapterPosition();
+
+                    String note = equationList.get(viewHolder.getAdapterPosition()).getEquation();
+                    // backup of removed item for undo purpose
+                    deletedItemEquation = equationList.get(viewHolder.getAdapterPosition());
+
+                    deletedIndex = viewHolder.getAdapterPosition();
+                    // remove the item from recycler view
+                    deleteEquation(position);
+                    //mAdapter.removeNote(viewHolder.getAdapterPosition());
+
+                    Snackbar snackbar = Snackbar
+                            .make(recyclerView, note + " removed from cart!", Snackbar.LENGTH_LONG);
+
+
+                    snackbar.setAction("UNDO", new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+
+                            // undo is selected, restore the deleted item
+                            // mAdapter.restoreNote(deletedItem, deletedIndex);
+                            // Note note1 = new Note();
+                            // note1.setId(deletedIndex);
+                            // note1.getNote()
+                            reCreateEquationSwipe(deletedItemEquation.getEquation(), deletedItemResult.getResult(), deletedIndex);
+
+                        }
+                    });
+                    snackbar.setActionTextColor(Color.BLUE);
+                    snackbar.show();
                 }
             }
 
@@ -158,36 +179,83 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    public void removeItem(int position) {
-        mDatabase.delete(DataContract.DataEntry.TABLE_NAME, DataContract.DataEntry._ID + "=" + position, null);
-        mAdapter.swapCursor(getAllItems());
-        mAdapter.notifyItemRemoved(position);
+    //CREATE Equation in DataBase
+    private void createEquation(String equation, String result) {
+
+        long id = db.insertEquation(equation, result);
+
+        // get the newly inserted note from db
+        EquationData n = db.getEquation(id);
+
+        if (n != null) {
+            // adding new note to array list at 0 position
+            equationList.add(0, n);
+
+            // refreshing the list
+            //mAdapter.notifyDataSetChanged();
+        }
     }
 
-    /*public void deleteNotes() {
-        final Snackbar snackbar = Snackbar.make(mRelativeLayout, "Item is deleted", Snackbar.LENGTH_LONG);
-        is_deleted = 1;
-        snackbar.setAction("UNDO", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                is_deleted = 0;
+    public void reCreateEquationSwipe(String equation, String result, int pos){
+        long id = db.insertEquation(equation, result);
+
+        // get the newly inserted note from db
+        EquationData n = db.getEquation(id);
+
+        if (n != null) {
+            // adding new note to array list at 0 position
+            equationList.add(pos, n);
+
+            // refreshing the list
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void updateEquation(String note, int position) {
+        EquationData n = equationList.get(position);
+        // updating note text
+        n.setEquation(note);
+
+        // updating note in db
+        db.updateNote(n);
+
+        // refreshing the list
+        equationList.set(position, n);
+        mAdapter.notifyItemChanged(position);
+
+        toggleEmptyNotes();
+    }
+
+    private void deleteEquation(int position) {
+        // deleting the note from db
+        db.deleteNote(equationList.get(position));
+
+        // removing the note from the list
+        equationList.remove(position);
+
+        mAdapter.notifyItemRemoved(position);
+
+        toggleEmptyNotes();
+    }
+
+    /**
+     * Opens dialog with Edit - Delete options
+     * Edit - 0
+     * Delete - 0
+     */
+
+
+    private void toggleEmptyNotes() {
+        // you can check notesList.size() > 0
+            if (equationList.size() > 0) {
+                emptyView.setVisibility(View.GONE);
+            } else {
+                emptyView.setVisibility(View.VISIBLE);
             }
-        });
-        snackbar.show();
-        DBOperations.deleteStudent(mDBHelper, id, is_deleted);
-    }*/
-
-
-    private Cursor getAllItems() {
-        return mDatabase.query(
-                DataContract.DataEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DataContract.DataEntry.COLUMN_TIMESTAMP + " DESC"
-        );
+//        if (db.getNotesCount() > 0) {
+//        } else {
+//            noNotesView.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override

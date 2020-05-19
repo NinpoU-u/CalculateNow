@@ -27,7 +27,7 @@
 
 
             <TextView
-                android:id="@+id/textview_amount_item"
+                android:id="@+id/textview_operation_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -51,7 +51,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textview_amount_item" />
+                app:layout_constraintStart_toEndOf="@+id/textview_operation_item" />
 
 
             <TextView

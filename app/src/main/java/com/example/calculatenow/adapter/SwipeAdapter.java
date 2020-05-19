@@ -1,3 +1,4 @@
+/*
 package com.example.calculatenow.adapter;
 
 
@@ -15,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.calculatenow.R;
-import com.example.calculatenow.database.DataContract;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -54,10 +54,12 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.SwipeViewHol
         String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());
         viewBinderHelper.setOpenOnlyOne(true);
 
-        /*viewBinderHelper.bind(swipeViewHolder.swipelayout, name);
+        */
+/*viewBinderHelper.bind(swipeViewHolder.swipelayout, name);
         viewBinderHelper.bind(swipeViewHolder.swipelayout, amount);
         viewBinderHelper.bind(swipeViewHolder.swipelayout, currentDate);
-        viewBinderHelper.closeLayout(String.valueOf(id));*/
+        viewBinderHelper.closeLayout(String.valueOf(id));*//*
+
 
 
         swipeViewHolder.nameText.setText(name);
@@ -76,12 +78,14 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.SwipeViewHol
             }
         });
 
-        /*swipeViewHolder.txtDelete.setOnClickListener(new View.OnClickListener() {
+        */
+/*swipeViewHolder.txtDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });*/
+        });*//*
+
     }
 
     @Override
@@ -113,3 +117,4 @@ public class SwipeAdapter extends RecyclerView.Adapter<SwipeAdapter.SwipeViewHol
 
 
 }
+*/

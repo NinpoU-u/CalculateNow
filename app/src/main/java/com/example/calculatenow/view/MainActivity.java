@@ -3,10 +3,8 @@ package com.example.calculatenow.view;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -21,18 +19,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.calculatenow.R;
 import com.example.calculatenow.calculator.Calculator;
-import com.example.calculatenow.database.DataContract;
-import com.example.calculatenow.database.DatabaseHelper;
-import com.example.calculatenow.model.EquitationCard;
 
-import java.util.ArrayList;
+/**
+ * Created by NinpoU-u on 19/05/20.
+ */
 
 public class MainActivity extends AppCompatActivity {
     private Calculator calculator;
     private TextView displayPrimary;
     private TextView displaySecondary;
     private HorizontalScrollView hsv;
-    private SQLiteDatabase mDatabase;
+    private Intent intent;
+
 
 
     @Override
@@ -84,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
         setContentView(R.layout.activity_main);
+
+        //adapter
+        //mAdapter = new NotesAdapter(this, equationList);
 
         //fields for database
         displayPrimary = findViewById(R.id.display_primary);
@@ -182,7 +183,21 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_equals).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addItem();
+                //Check string
+                if (displayPrimary.getText().toString().trim().length() == 0 || displaySecondary.getText().toString().trim().length() == 0) {
+                    return;
+                }
+                //add string's
+                String operation = displayPrimary.getText().toString();
+                String result = displaySecondary.getText().toString();
+
+                SharedPreferences prefs = getSharedPreferences("my_prefs", MODE_PRIVATE);
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putString("operation", operation);
+                edit.putString("result", result);
+                edit.apply();
+
+                //check NonNull
                 if (!getText().equals(""))
                     calculator.equal();
 
@@ -256,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt("launch_count", -1);
             editor.apply();
         }
+
     }
 
     @Override
@@ -310,26 +326,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void displaySecondary(String val) {
         displaySecondary.setText(formatToDisplayMode(val));
-    }
-
-    private void addItem() {
-
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        mDatabase = dbHelper.getWritableDatabase();
-
-        if (displayPrimary.getText().toString().trim().length() == 0 || displaySecondary.getText().toString().trim().length() == 0) {
-            return;
-        }
-
-        String operation = displayPrimary.getText().toString();
-        String result = displaySecondary.getText().toString();
-
-        ContentValues cv = new ContentValues();
-        cv.put(DataContract.DataEntry.COLUMN_NAME, result);
-        cv.put(DataContract.DataEntry.COLUMN_AMOUNT, operation);
-
-        mDatabase.insert(DataContract.DataEntry.TABLE_NAME, null, cv);
-        //mAdapter.swapCursor(getAllItems());
     }
 
 
