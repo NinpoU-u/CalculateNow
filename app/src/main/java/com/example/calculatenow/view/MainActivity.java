@@ -192,12 +192,6 @@ public class MainActivity extends AppCompatActivity {
                 String operation = displayPrimary.getText().toString();
                 String result = displaySecondary.getText().toString();
 
-                /*SharedPreferences prefs = getSharedPreferences("my_prefs", MODE_PRIVATE);
-                SharedPreferences.Editor edit = prefs.edit();
-                edit.putString("operation", operation);
-                edit.putString("result", result);
-                edit.apply();*/
-
                 createEquation(operation, result);
 
                 //check NonNull

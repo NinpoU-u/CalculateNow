@@ -2,7 +2,6 @@ package com.example.calculatenow.view;
 
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -37,17 +36,13 @@ public class HistoryActivity extends AppCompatActivity {
     private DatabaseHelper db;
     private List<EquationData> equationList = new ArrayList<>();
     private EquationAdapter mAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         db =  DatabaseHelper.getInstance(this);
-
-        /*//Shared prefs to get data from MainActivity
-        SharedPreferences equationProcess = getSharedPreferences("my_prefs", 0);
-        String equation = equationProcess.getString("operation", "");
-        String result = equationProcess.getString("result", "");*/
 
         equationList.addAll(db.getAllEq());
 
@@ -103,8 +98,7 @@ public class HistoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         emptyView = findViewById(R.id.empty_view);
 
-
-        final RecyclerView recyclerView = findViewById(R.id.recycler_view);
+       recyclerView = findViewById(R.id.recycler_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -120,39 +114,50 @@ public class HistoryActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
 
-                if (viewHolder instanceof EquationAdapter.MyViewHolder) {
-                    int position = viewHolder.getAdapterPosition();
+                    switch (direction){
+                        case ItemTouchHelper.LEFT:
+                            mAdapter.sendEquation(position);
+                            mAdapter.notifyDataSetChanged();
+                            break;
+                        case ItemTouchHelper.RIGHT:
+                            if (viewHolder instanceof EquationAdapter.MyViewHolder) {
 
-                    String note = equationList.get(viewHolder.getAdapterPosition()).getEquation();
-                    // backup of removed item for undo purpose
-                    deletedItemEquation = equationList.get(viewHolder.getAdapterPosition());
+                                String firstOperation = equationList.get(viewHolder.getAdapterPosition()).getEquation();
+                                String secondOperation = equationList.get(viewHolder.getAdapterPosition()).getResult();
+                                // backup of removed item for undo purpose
+                                deletedItemEquation = equationList.get(viewHolder.getAdapterPosition());
 
-                    deletedIndex = viewHolder.getAdapterPosition();
-                    // remove the item from recycler view
-                    deleteEquation(position);
-                    //mAdapter.removeNote(viewHolder.getAdapterPosition());
+                                deletedIndex = viewHolder.getAdapterPosition();
+                                // remove the item from recycler view
+                                deleteEquation(position);
 
-                    Snackbar snackbar = Snackbar
-                            .make(recyclerView, note + " removed from cart!", Snackbar.LENGTH_LONG);
+                                Snackbar snackbar = Snackbar
+                                        .make(recyclerView, firstOperation + " = " + secondOperation + " removed from history!", Snackbar.LENGTH_LONG);
 
+                                snackbar.setAction("UNDO", new View.OnClickListener() {
 
-                    snackbar.setAction("UNDO", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                        @Override
-                        public void onClick(View view) {
+                                        //GET data
+                                        //deleteItemEquation have fields operation (2+2) and result 4
+                                        String operation = deletedItemEquation.getEquation();
+                                        String result = deletedItemEquation.getResult();
 
-                            // undo is selected, restore the deleted item
-                            // mAdapter.restoreNote(deletedItem, deletedIndex);
-                            // Note note1 = new Note();
-                            // note1.setId(deletedIndex);
-                            // note1.getNote()
-                            reCreateEquationSwipe(deletedItemEquation.getEquation(), deletedItemResult.getResult(), deletedIndex);
+                                        //pass data to method
+                                        reCreateEquationSwipe(operation, result, deletedIndex);
+                                        mAdapter.notifyDataSetChanged();
 
-                        }
-                    });
-                    snackbar.setActionTextColor(Color.BLUE);
-                    snackbar.show();
+                                        toggleEmptyEquation();
+
+                                    }
+                                });
+                                snackbar.setActionTextColor(getResources().getColor(R.color.blue));
+                                snackbar.show();
+                            break;
+                    }
                 }
             }
 
@@ -194,20 +199,6 @@ public class HistoryActivity extends AppCompatActivity {
         }
     }
 
-    private void updateEquation(String note, int position) {
-        EquationData n = equationList.get(position);
-        // updating note text
-        n.setEquation(note);
-
-        // updating note in db
-        db.updateNote(n);
-
-        // refreshing the list
-        equationList.set(position, n);
-        mAdapter.notifyItemChanged(position);
-
-        toggleEmptyEquation();
-    }
 
     private void deleteEquation(int position) {
         // deleting the note from db
@@ -227,6 +218,20 @@ public class HistoryActivity extends AppCompatActivity {
      * Delete - 0
      */
 
+    private void updateEquation(String note, int position) {
+        EquationData n = equationList.get(position);
+        // updating note text
+        n.setEquation(note);
+
+        // updating note in db
+        db.updateNote(n);
+
+        // refreshing the list
+        equationList.set(position, n);
+        mAdapter.notifyItemChanged(position);
+
+        toggleEmptyEquation();
+    }
 
     private void toggleEmptyEquation() {
         // you can check notesList.size() > 0
