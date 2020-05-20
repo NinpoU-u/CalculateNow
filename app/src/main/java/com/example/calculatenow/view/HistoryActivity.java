@@ -24,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
@@ -37,6 +38,7 @@ public class HistoryActivity extends AppCompatActivity {
     private List<EquationData> equationList = new ArrayList<>();
     private EquationAdapter mAdapter;
     private RecyclerView recyclerView;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +49,9 @@ public class HistoryActivity extends AppCompatActivity {
         equationList.addAll(db.getAllEq());
 
         //Shared prefs for theme
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp.getBoolean("pref_dark", false))
-            switch (sp.getString("pref_theme", "0")) {
+            switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
                 case "0":
                     setTheme(R.style.AppTheme_Dark_Blue);
                     break;
@@ -70,7 +72,7 @@ public class HistoryActivity extends AppCompatActivity {
                     break;
             }
         else
-            switch (sp.getString("pref_theme", "0")) {
+            switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
                 case "0":
                     setTheme(R.style.AppTheme_Light_Blue);
                     break;
@@ -94,7 +96,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_history);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_history));
-        getSupportActionBar().setTitle("History");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("History");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         emptyView = findViewById(R.id.empty_view);
 
@@ -154,7 +156,50 @@ public class HistoryActivity extends AppCompatActivity {
 
                                     }
                                 });
-                                snackbar.setActionTextColor(getResources().getColor(R.color.blue));
+
+                                sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                if (sp.getBoolean("pref_dark", false))
+                                    switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
+                                        case "0":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.blue_dark));
+                                            break;
+                                        case "1":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.cyan_dark));
+                                            break;
+                                        case "2":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.gray_dark));
+                                            break;
+                                        case "3":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.green_dark));
+                                            break;
+                                        case "4":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.purple_dark));
+                                            break;
+                                        case "5":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.red_dark));
+                                            break;
+                                    }
+                                else
+                                    switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
+                                        case "0":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.blue));
+                                            break;
+                                        case "1":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.cyan));
+                                            break;
+                                        case "2":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.gray));
+                                            break;
+                                        case "3":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.green));
+                                            break;
+                                        case "4":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.purple));
+                                            break;
+                                        case "5":
+                                            snackbar.setActionTextColor(getResources().getColor(R.color.red));
+                                            break;
+                                    }
                                 snackbar.show();
                             break;
                     }
