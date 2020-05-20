@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.calculatenow.R;
 import com.example.calculatenow.calculator.Calculator;
+import com.example.calculatenow.database.DatabaseHelper;
 
 /**
  * Created by NinpoU-u on 19/05/20.
@@ -30,12 +31,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView displaySecondary;
     private HorizontalScrollView hsv;
     private Intent intent;
+    private DatabaseHelper db;
 
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db =  DatabaseHelper.getInstance(this);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp.getBoolean("pref_dark", false))
@@ -82,9 +86,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         setContentView(R.layout.activity_main);
-
-        //adapter
-        //mAdapter = new NotesAdapter(this, equationList);
 
         //fields for database
         displayPrimary = findViewById(R.id.display_primary);
@@ -191,11 +192,13 @@ public class MainActivity extends AppCompatActivity {
                 String operation = displayPrimary.getText().toString();
                 String result = displaySecondary.getText().toString();
 
-                SharedPreferences prefs = getSharedPreferences("my_prefs", MODE_PRIVATE);
+                /*SharedPreferences prefs = getSharedPreferences("my_prefs", MODE_PRIVATE);
                 SharedPreferences.Editor edit = prefs.edit();
                 edit.putString("operation", operation);
                 edit.putString("result", result);
-                edit.apply();
+                edit.apply();*/
+
+                createEquation(operation, result);
 
                 //check NonNull
                 if (!getText().equals(""))
@@ -328,7 +331,12 @@ public class MainActivity extends AppCompatActivity {
         displaySecondary.setText(formatToDisplayMode(val));
     }
 
+    //CREATE Equation in DataBase
+    private void createEquation(String equation, String result) {
 
+        long id = db.insertEquation(equation, result);
+
+    }
 
     //String formatting
     private String formatToDisplayMode(String s) {

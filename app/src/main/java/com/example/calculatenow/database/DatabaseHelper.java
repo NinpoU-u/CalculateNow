@@ -101,7 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<EquationData> getAllEq() {
-        List<EquationData> notes = new ArrayList<>();
+        List<EquationData> equation = new ArrayList<>();
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + EquationData.TABLE_NAME + " ORDER BY " +
@@ -115,13 +115,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                EquationData note = new EquationData();
-                note.setId(cursor.getInt(cursor.getColumnIndex(EquationData.COLUMN_ID)));
-                note.setEquation(cursor.getString(cursor.getColumnIndex(EquationData.COLUMN_EQUATION)));
-                note.setResult(cursor.getString(cursor.getColumnIndex(EquationData.COLUMN_RESULT)));
-                note.setTimestamp(cursor.getString(cursor.getColumnIndex(EquationData.COLUMN_TIMESTAMP)));
+                EquationData operation = new EquationData();
+                operation.setId(cursor.getInt(cursor.getColumnIndex(EquationData.COLUMN_ID)));
+                operation.setEquation(cursor.getString(cursor.getColumnIndex(EquationData.COLUMN_EQUATION)));
+                operation.setResult(cursor.getString(cursor.getColumnIndex(EquationData.COLUMN_RESULT)));
+                operation.setTimestamp(cursor.getString(cursor.getColumnIndex(EquationData.COLUMN_TIMESTAMP)));
 
-                notes.add(note);
+                equation.add(operation);
             } while (cursor.moveToNext());
         }
 
@@ -129,7 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         // return notes list
-        return notes;
+        return equation;
     }
 
     public int getNotesCount() {

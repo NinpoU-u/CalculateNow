@@ -44,19 +44,14 @@ public class HistoryActivity extends AppCompatActivity {
 
         db =  DatabaseHelper.getInstance(this);
 
-        if (equationList != null) {
-            equationList.addAll(db.getAllEq());
-        }
-
-        //Shared prefs to send data between 2 activities
+        /*//Shared prefs to get data from MainActivity
         SharedPreferences equationProcess = getSharedPreferences("my_prefs", 0);
         String equation = equationProcess.getString("operation", "");
-        String result = equationProcess.getString("result", "");
+        String result = equationProcess.getString("result", "");*/
 
-        createEquation(equation, result);
+        equationList.addAll(db.getAllEq());
 
-
-
+        //Shared prefs for theme
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sp.getBoolean("pref_dark", false))
             switch (sp.getString("pref_theme", "0")) {
@@ -116,8 +111,7 @@ public class HistoryActivity extends AppCompatActivity {
         mAdapter = new EquationAdapter(this, equationList);
         recyclerView.setAdapter(mAdapter);
 
-
-        toggleEmptyNotes();
+        toggleEmptyEquation();
 
        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -179,22 +173,11 @@ public class HistoryActivity extends AppCompatActivity {
 
     }
 
-    //CREATE Equation in DataBase
-    private void createEquation(String equation, String result) {
-
-        long id = db.insertEquation(equation, result);
-
-        // get the newly inserted note from db
-        EquationData n = db.getEquation(id);
-
-        if (n != null) {
-            // adding new note to array list at 0 position
-            equationList.add(0, n);
-
-            // refreshing the list
-            //mAdapter.notifyDataSetChanged();
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
+
 
     public void reCreateEquationSwipe(String equation, String result, int pos){
         long id = db.insertEquation(equation, result);
@@ -223,7 +206,7 @@ public class HistoryActivity extends AppCompatActivity {
         equationList.set(position, n);
         mAdapter.notifyItemChanged(position);
 
-        toggleEmptyNotes();
+        toggleEmptyEquation();
     }
 
     private void deleteEquation(int position) {
@@ -235,7 +218,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         mAdapter.notifyItemRemoved(position);
 
-        toggleEmptyNotes();
+        toggleEmptyEquation();
     }
 
     /**
@@ -245,7 +228,7 @@ public class HistoryActivity extends AppCompatActivity {
      */
 
 
-    private void toggleEmptyNotes() {
+    private void toggleEmptyEquation() {
         // you can check notesList.size() > 0
             if (equationList.size() > 0) {
                 emptyView.setVisibility(View.GONE);
