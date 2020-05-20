@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp">
+        android:elevation="8dp">
 
         <ImageView
             android:id="@+id/settings"
@@ -36,7 +36,7 @@
         android:layout_height="0dp"
         android:layout_weight="2"
         android:background="?attr/colorPrimary"
-        android:elevation="4dp">
+        android:elevation="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,9 +107,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.2"
         android:background="?attr/panel2"
         android:orientation="vertical"
+        android:elevation="4dp"
         android:padding="@dimen/standard_margin">
 
         <LinearLayout
@@ -178,6 +179,7 @@
                 android:gravity="center"
                 android:textColor="#ff5f52"
                 android:textSize="@dimen/panel_2_button_text_port" />
+
 
         </LinearLayout>
 
@@ -253,7 +255,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2.7"
         android:background="?attr/panel1"
         android:orientation="horizontal"
         android:padding="@dimen/standard_margin">
