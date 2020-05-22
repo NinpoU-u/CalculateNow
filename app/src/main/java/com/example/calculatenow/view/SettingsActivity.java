@@ -1,27 +1,38 @@
 package com.example.calculatenow.view;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import androidx.core.app.TaskStackBuilder;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.TaskStackBuilder;
 
 import com.example.calculatenow.R;
 
+import java.util.Objects;
+
+/**
+ * Created by NinpoU-u on 21/01/20.
+ */
+
 public class SettingsActivity extends AppCompatActivity {
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         if (sp.getBoolean("pref_dark", false))
-            switch (sp.getString("pref_theme", "0")) {
+            switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
                 case "0":
                     setTheme(R.style.AppTheme_Dark_Blue);
                     break;
@@ -42,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
             }
         else
-            switch (sp.getString("pref_theme", "0")) {
+            switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
                 case "0":
                     setTheme(R.style.AppTheme_Light_Blue);
                     break;
@@ -64,8 +75,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
         setContentView(R.layout.activity_settings);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setTitle("Settings");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction().replace(R.id.content, new SettingsFragment()).commit();
     }

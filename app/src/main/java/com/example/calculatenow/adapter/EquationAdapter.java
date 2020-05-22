@@ -1,15 +1,18 @@
 package com.example.calculatenow.adapter;
 
-/**
- * Created by ravi on 20/02/18.
+/*
+  Created by NinpoU-u on 20/05/20.
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,36 +31,35 @@ public class EquationAdapter extends RecyclerView.Adapter<EquationAdapter.MyView
 
     private Context context;
     private List<EquationData> notesList;
-    private int safePosition;
-    //ItemClickListener itemClickListener;
 
+
+    private Context getContext(){
+        return context;
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView equation;
         TextView result;
-        TextView timestamp;
-        public ImageView setting;
-        //public TextView dot;
+        TextView timeStampDate;
+        TextView timeStampTime;
+        TextView equal;
+        //public ImageView setting;
 
 
         MyViewHolder(View view) {
             super(view);
-            equation = view.findViewById(R.id.textview_operation_item);
-            result = view.findViewById(R.id.textview_result);
-            //dot = view.findViewById(R.id.dot);
-            timestamp = view.findViewById(R.id.date_id);
+            equation = view.findViewById(R.id.textView_operation_item);
+            result = view.findViewById(R.id.textView_result);
+            timeStampDate = view.findViewById(R.id.date_id);
+            timeStampTime = view.findViewById(R.id.time_id);
+            equal = view.findViewById(R.id.equally);
         }
-    }
-
-    private Context getContext(){
-        return context;
     }
 
 
     public EquationAdapter(Context context, List<EquationData> notesList) {
         this.context = context;
         this.notesList = notesList;
-        //this.itemClickListener = itemClickListener;
     }
 
 
@@ -72,19 +74,23 @@ public class EquationAdapter extends RecyclerView.Adapter<EquationAdapter.MyView
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final EquationData note = notesList.get(position);
+        final EquationData equation= notesList.get(position);
 
+        holder.equation.setText(equation.getEquation());
+        holder.result.setText(equation.getResult());
+        holder.timeStampDate.setText(formatDate(equation.getTimestamp()));
+        holder.timeStampTime.setText(formatTime(equation.getTimestamp()));
 
-        holder.equation.setText(note.getEquation());
-        holder.result.setText(note.getResult());
-
-        /*// Displaying dot from HTML character code
-        holder.dot.setText(Html.fromHtml("&#8226;"));*/
-
-        // Formatting and displaying timestamp
-        holder.timestamp.setText(formatDate(note.getTimestamp()));
-
-
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sp.getBoolean("pref_dark", false)){
+            holder.equation.setTextColor(Color.WHITE);
+            holder.equal.setTextColor(Color.WHITE);
+            holder.result.setTextColor(Color.WHITE);
+        }else{
+            holder.equation.setTextColor(Color.BLACK);
+            holder.equal.setTextColor(Color.BLACK);
+            holder.result.setTextColor(Color.BLACK);
+        }
     }
 
     @Override
@@ -99,30 +105,45 @@ public class EquationAdapter extends RecyclerView.Adapter<EquationAdapter.MyView
      */
     private String formatDate(String dateStr) {
         try {
+            @SuppressLint("SimpleDateFormat")
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = fmt.parse(dateStr);
-            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM d");
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM dd");
             return fmtOut.format(date);
-        } catch (ParseException e) {
+        } catch (ParseException ignored) {
 
         }
-
         return "";
     }
 
-    public void removeNote(int position) {
-        notesList.remove(position);
+    private String formatTime(String dateStr) {
+        try {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = fmt.parse(dateStr);
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat fmtOut = new SimpleDateFormat("HH:mm");
+            return fmtOut.format(date);
+        } catch (ParseException ignored) {
+
+        }
+        return "";
+    }
+
+    /*public void removeEq(int position) {
+        eqList.remove(position);
         // notify the item removed by position
         // to perform recycler view delete animations
         // NOTE: don't call notifyDataSetChanged()
         notifyItemChanged(position);
-    }
+    }*/
 
-    public void restoreNote(EquationData note, int position) {
-        notesList.add(position,note);
+    /*public void restoreEq(EquationData note, int position) {
+        eqList.add(position,equation);
         // notify item added by position
         notifyItemInserted(position);
-    }
+    }*/
 
     public void sendEquation(int position){
         final String equation = notesList.get(position).getEquation();

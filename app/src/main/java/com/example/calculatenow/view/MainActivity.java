@@ -3,8 +3,10 @@ package com.example.calculatenow.view;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +24,10 @@ import com.example.calculatenow.R;
 import com.example.calculatenow.calculator.Calculator;
 import com.example.calculatenow.database.DatabaseHelper;
 
+import java.util.Objects;
+
 /**
- * Created by NinpoU-u on 19/05/20.
+ * Created by NinpoU-u on 22/01/19.
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -30,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
     private TextView displayPrimary;
     private TextView displaySecondary;
     private HorizontalScrollView hsv;
-    private Intent intent;
     private DatabaseHelper db;
+    public ImageView backspaceBlack;
+    public ImageView backspaceWhite;
 
-
-
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,9 @@ public class MainActivity extends AppCompatActivity {
         db =  DatabaseHelper.getInstance(this);
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if (sp.getBoolean("pref_dark", false))
-            switch (sp.getString("pref_theme", "0")) {
+        if (sp.getBoolean("pref_dark", false)) {
+
+            switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
                 case "0":
                     setTheme(R.style.AppTheme_Dark_Blue);
                     break;
@@ -63,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                     setTheme(R.style.AppTheme_Dark_Red);
                     break;
             }
-        else
-            switch (sp.getString("pref_theme", "0")) {
+        }else {
+            switch (Objects.requireNonNull(sp.getString("pref_theme", "0"))) {
                 case "0":
                     setTheme(R.style.AppTheme_Light_Blue);
                     break;
@@ -84,13 +90,19 @@ public class MainActivity extends AppCompatActivity {
                     setTheme(R.style.AppTheme_Light_Red);
                     break;
             }
-
+        }
+        //Start of visual mapping
         setContentView(R.layout.activity_main);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //fields for database
         displayPrimary = findViewById(R.id.display_primary);
         displaySecondary = findViewById(R.id.display_secondary);
         hsv =  findViewById(R.id.display_hsv);
+
+        //find buttons
+        backspaceBlack = findViewById(R.id.button_delete_one_black);
+        backspaceWhite = findViewById(R.id.button_delete_one_white);
 
         //init view (Buttons digit)
         TextView[] digits = {
@@ -104,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.button_7),
                 findViewById(R.id.button_8),
                 findViewById(R.id.button_9)};
-        for (int i = 0; i < digits.length; i++) {
-            final String id = (String) digits[i].getText();
-            digits[i].setOnClickListener(new View.OnClickListener() {
+
+        for (TextView digit : digits) {
+            final String id = (String) digit.getText();
+            digit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     calculator.digit(id.charAt(0));
@@ -131,11 +144,12 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.button_subtract),
                 findViewById(R.id.button_multiply),
                 findViewById(R.id.button_divide),
-                findViewById(R.id.button_decimal)};
+                findViewById(R.id.button_decimal),
+                findViewById(R.id.percent)};
 
-        for (int i = 0; i < buttons.length; i++) {
-            final String id = (String) buttons[i].getText();
-            buttons[i].setOnClickListener(new View.OnClickListener() {
+        for (TextView button : buttons) {
+            final String id = (String) button.getText();
+            button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (id.equals("sin"))
@@ -175,34 +189,35 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        findViewById(R.id.button_delete).setOnClickListener(new View.OnClickListener() {
+
+        //set logic for changing state of button
+        if (sp.getBoolean("pref_dark", false)) {
+            backspaceBlack.setVisibility(View.GONE);
+            backspaceWhite.setVisibility(View.VISIBLE);
+        }else {
+            backspaceBlack.setVisibility(View.VISIBLE);
+            backspaceWhite.setVisibility(View.GONE);
+        }
+
+        //For black button
+        backspaceBlack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 calculator.delete();
             }
         });
-        findViewById(R.id.button_equals).setOnClickListener(new View.OnClickListener() {
+
+        //For white button
+        backspaceWhite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Check string
-                if (displayPrimary.getText().toString().trim().length() == 0 || displaySecondary.getText().toString().trim().length() == 0) {
-                    return;
-                }
-                //add string's
-                String operation = displayPrimary.getText().toString();
-                String result = displaySecondary.getText().toString();
-
-                createEquation(operation, result);
-
-                //check NonNull
-                if (!getText().equals(""))
-                    calculator.equal();
-
+                calculator.delete();
             }
         });
-        findViewById(R.id.button_delete).setOnLongClickListener(new View.OnLongClickListener() {
+
+        findViewById(R.id.button_delete_all).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View v) {
                 if (!displayPrimary.getText().toString().trim().equals("")) {
                     final View displayOverlay = findViewById(R.id.display_overlay);
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -242,7 +257,26 @@ public class MainActivity extends AppCompatActivity {
                     } else
                         calculator.setText("");
                 }
-                return false;
+            }
+        });
+
+        findViewById(R.id.button_equals).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Check string
+                if (displayPrimary.getText().toString().trim().length() == 0 || displaySecondary.getText().toString().trim().length() == 0) {
+                    return;
+                }
+                //add string's
+                String operation = displayPrimary.getText().toString();
+                String result = displaySecondary.getText().toString();
+
+                createEquation(operation, result);
+
+                //check NonNull
+                if (!getText().equals(""))
+                    calculator.equal();
+
             }
         });
 
@@ -268,7 +302,6 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt("launch_count", -1);
             editor.apply();
         }
-
     }
 
     @Override
@@ -303,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                hsv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                hsv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 hsv.fullScroll(View.FOCUS_LEFT);
             }
         });
@@ -315,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                hsv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                hsv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 hsv.fullScroll(View.FOCUS_RIGHT);
             }
         });
@@ -328,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
     //CREATE Equation in DataBase
     private void createEquation(String equation, String result) {
 
-        long id = db.insertEquation(equation, result);
+        db.insertEquation(equation, result);
 
     }
 

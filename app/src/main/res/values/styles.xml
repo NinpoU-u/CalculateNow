@@ -3,7 +3,6 @@
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="panel1">@color/panel_1_light</item>
         <item name="panel2">@color/panel_2_light</item>
-        <item name="backspace">@drawable/ic_backspace_24px_black</item>
     </style>
 
     <style name="AppTheme.Light.historyActivityTheme" parent="AppTheme.Light">

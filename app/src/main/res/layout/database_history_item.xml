@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipelayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,27 +13,63 @@
             android:layout_width="match_parent"
             android:layout_height="80dp">
 
+
             <TextView
-                android:id="@+id/date_id"
+                android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:text="date"
+                android:layout_marginStart="24dp"
+                android:text="@string/date"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/textview_amount_item"
+                app:layout_constraintBottom_toTopOf="@+id/textView_operation_item"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
             </TextView>
 
+            <TextView
+                android:id="@+id/date_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_textView"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/textView1"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </TextView>
 
             <TextView
-                android:id="@+id/textview_operation_item"
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/time"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@+id/date_id"
+                app:layout_constraintTop_toTopOf="@+id/date_id">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/time_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_textView"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/textView_operation_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Operation"
+                android:text="@string/operation"
                 android:textColor="#000"
                 android:textSize="25sp"
                 android:layout_marginStart="25dp"
@@ -42,31 +79,31 @@
 
 
             <TextView
-                android:id="@+id/equliv"
+                android:id="@+id/equally"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="="
+                android:text="@string/Equal"
                 android:textColor="#000"
                 android:textSize="25sp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textview_operation_item" />
+                app:layout_constraintStart_toEndOf="@+id/textView_operation_item" />
 
 
             <TextView
-                android:id="@+id/textview_result"
+                android:id="@+id/textView_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text=" Result"
+                android:text="@string/result"
                 android:textColor="#000"
                 android:textSize="25sp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/equliv" />
+                app:layout_constraintStart_toEndOf="@+id/equally" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

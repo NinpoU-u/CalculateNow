@@ -1,6 +1,8 @@
 package com.example.calculatenow.view;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,11 +30,14 @@ import java.util.Objects;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+/**
+ * Created by NinpoU-u on 19/05/20.
+ */
+
 public class HistoryActivity extends AppCompatActivity {
     private TextView emptyView;
 
     private EquationData deletedItemEquation;
-    private EquationData deletedItemResult;
     private int deletedIndex;
     private DatabaseHelper db;
     private List<EquationData> equationList = new ArrayList<>();
@@ -40,6 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SharedPreferences sp;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,10 +101,14 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_history);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar_history));
         Objects.requireNonNull(getSupportActionBar()).setTitle("History");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //init
         emptyView = findViewById(R.id.empty_view);
+        //----------
+
 
        recyclerView = findViewById(R.id.recycler_view);
 
@@ -263,7 +273,7 @@ public class HistoryActivity extends AppCompatActivity {
      * Delete - 0
      */
 
-    private void updateEquation(String note, int position) {
+    /*private void updateEquation(String note, int position) {
         EquationData n = equationList.get(position);
         // updating note text
         n.setEquation(note);
@@ -276,7 +286,19 @@ public class HistoryActivity extends AppCompatActivity {
         mAdapter.notifyItemChanged(position);
 
         toggleEmptyEquation();
-    }
+    }*/
+
+   /* private void changeColors(SharedPreferences sp){
+        if (sp.getBoolean("pref_dark", false)) {
+            operation.setTextColor(Color.WHITE);
+            equal.setTextColor(Color.WHITE);
+            result.setTextColor(Color.WHITE);
+        }else {
+            operation.setTextColor(Color.BLACK);
+            equal.setTextColor(Color.BLACK);
+            result.setTextColor(Color.BLACK);
+        }
+    }*/
 
     private void toggleEmptyEquation() {
         // you can check notesList.size() > 0
@@ -285,10 +307,6 @@ public class HistoryActivity extends AppCompatActivity {
             } else {
                 emptyView.setVisibility(View.VISIBLE);
             }
-//        if (db.getNotesCount() > 0) {
-//        } else {
-//            noNotesView.setVisibility(View.VISIBLE);
-//        }
     }
 
     @Override

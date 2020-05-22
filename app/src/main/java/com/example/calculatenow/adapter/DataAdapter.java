@@ -1,3 +1,4 @@
+/*
 package com.example.calculatenow.adapter;
 
 import android.content.Context;
@@ -33,8 +34,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         DataViewHolder(View itemView) {
             super(itemView);
 
-            nameText = itemView.findViewById(R.id.textview_result);
-            countText = itemView.findViewById(R.id.textview_amount_item);
+            nameText = itemView.findViewById(R.id.textView_result);
+            countText = itemView.findViewById(R.id.textView_result);
             dateText = itemView.findViewById(R.id.date_id);
         }
     }
@@ -57,15 +58,19 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 
 
         //Database
-        /*final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
+        */
+/*final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
         final String amount = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_AMOUNT));
         int id = mCursor.getInt(mCursor.getColumnIndex(DataContract.DataEntry._ID));
-        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());*/
+        String currentDate = DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime());*//*
 
-        /*holder.nameText.setText(name);
+
+        */
+/*holder.nameText.setText(name);
         holder.countText.setText(amount);
         holder.itemView.setTag(id);
-        holder.dateText.setText(currentDate);*/
+        holder.dateText.setText(currentDate);*//*
+
 
     }
 
@@ -74,7 +79,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         return mCursor.getCount();
     }
 
-    /*public void sendEquation(){
+    */
+/*public void sendEquation(){
         final String name = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_NAME));
         final String amount = mCursor.getString(mCursor.getColumnIndex(DataContract.DataEntry.COLUMN_AMOUNT));
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -84,7 +90,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         intent.setType("text/plain");
         mContext.startActivity(Intent.createChooser(intent, "Send To"));
     }
-*/
+*//*
+
     public void swapCursor(Cursor newCursor) {
         if (mCursor != null) {
             mCursor.close();
@@ -97,3 +104,4 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
         }
     }
 }
+*/
